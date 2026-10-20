@@ -1,0 +1,27 @@
+h1{font-family:    lora;
+   text-align: center; 
+  }
+.diagonal-split {
+            background-image: linear-gradient(to top right, transparent calc(50% - 1px), #000, transparent calc(50% + 1px));
+        }
+.board{
+    table {
+      border-collapse: collapse;
+      width: 80%; /* Defina uma largura menor que 100% */
+      margin: 0 auto; /* Margem superior/inferior 0, esquerda/direita automáticas */
+      padding: 30px;
+}
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    td{
+  background: linear-gradient(to right bottom, transparent 49.9%, black 50%, black 50.1%, transparent 51%);
+}
+    
+
+    
+    
+
+}

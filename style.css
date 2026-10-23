@@ -1,8 +1,18 @@
 * {
 }
 
-body {
+:root {
+  --white: var(--white);
+  --black: var(--black);
+  --background: #F7F0ED;
+  --board: #C28D74;
+
 }
+
+body {
+    background-color: var(--background);
+}
+
 
 header {
 }
@@ -11,4 +21,58 @@ main {
 }
 
 footer {
+}
+
+/* Balls */
+
+
+
+/* Buttons */
+button {
+}
+
+.btn {
+}
+
+.btn:hover {
+}
+
+.btn:active {
+}
+
+.btn:disabled {
+}
+
+.btn-primary {
+}
+
+.btn-secondary {
+}
+
+/* Menus */
+nav {
+}
+
+.menu {
+}
+
+.menu-title {
+}
+
+.menu-list {
+}
+
+.menu-item {
+}
+
+.menu-item:hover {
+}
+
+.menu-item.active {
+}
+
+.menu-options {
+}
+
+.menu-option {
 }

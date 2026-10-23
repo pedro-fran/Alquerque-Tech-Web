@@ -17,10 +17,35 @@ body {
 header {
 }
 
+h1 {
+    font-family: Lora, serif;
+    text-align: center;
+}
+
 main {
 }
 
 footer {
+}
+
+/* Board */
+.board table {
+    border-collapse: collapse;
+    width: 80%;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.board th,
+.board td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    background: linear-gradient(to right bottom, transparent 49.9%, black 50%, black 50.1%, transparent 51%);
+}
+
+.diagonal-split {
+    background-image: linear-gradient(to top right, transparent calc(50% - 1px), #000, transparent calc(50% + 1px));
 }
 
 /* Balls */

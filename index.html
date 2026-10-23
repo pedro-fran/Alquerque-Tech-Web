@@ -1,16 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Alquerque</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header></header>
+    <header>
         <img src="Logo.png" alt="Alquerque logo">
+        <h1>Alquerque</h1>
+    </header>
 
     <main>
+        <!-- Configurações -->
+        <table>
+            <tr>
+                <td>
+                    <select size="3" name="Tamanho_Tabuleiro">
+                        <option>Small</option>
+                        <option>Medium</option>
+                        <option>Big</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select size="2" name="Novo_Jogo">
+                        <option>Computador</option>
+                        <option>Outro Jogador</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select size="2" name="Quem_joga">
+                        <option>1</option>
+                        <option>2</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Difficulty Board -->
+        <table>
+            <tr>
+                <td>
+                    <select size="3" name="Dificuldade">
+                        <option>easy</option>
+                        <option>medium</option>
+                        <option>hard</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Score Board -->
+        <table>
+            <tr>
+                <td>Player 1</td>
+                <td>Player 2</td>
+            </tr>
+            <tr>
+                <td>Score 1</td>
+                <td>Score 2</td>
+            </tr>
+        </table>
+
+        <!-- Tabuleiro -->
+        <div class="board">
+            <table>
+                <tr>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                </tr>
+                <tr>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                    <td>.</td>
+                </tr>
+            </table>
+        </div>
+
         <!-- TEST: buttons -->
         <section>
             <button class="button">.button</button>

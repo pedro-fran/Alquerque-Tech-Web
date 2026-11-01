@@ -1,13 +1,12 @@
 :root {
     --background: #F7F0ED;
     --surface: #FFFFFF;
-    --board: #E9D3C6;
-    --line: #8A5A44;
-    --accent: #C28D74;
+    --board: #FFFFFF;
+    --accent: #071d6d;
     --text: #2B1E18;
-    --blue: #3F51E0;
-    --red: #E04848;
-    --highlight: #F2A93B;
+    --blue: rgb(64, 113, 193);
+    --red: #dd2424;
+    --highlight: #ece9dd;
 }
 
 * {
@@ -24,7 +23,7 @@ body {
 h1,
 h2,
 h3 {
-    font-family: Lora, Georgia, serif;
+    font-family: Lora, Arial, serif;
 }
 
 /* ---------- Header: logo + identification ---------- */
@@ -36,7 +35,6 @@ header {
     gap: 1rem;
     padding: 0.75rem 1.5rem;
     background-color: var(--surface);
-    border-bottom: 3px solid var(--accent);
 }
 
 #logo {
@@ -46,7 +44,7 @@ header {
 }
 
 #logo img {
-    height: 100px;
+    height: 150px;
     width: auto;
 }
 
@@ -67,7 +65,7 @@ header {
 #identification input {
     width: 9rem;
     padding: 0.35rem 0.5rem;
-    border: 1px solid var(--accent);
+    border: 1px solid black;
     border-radius: 4px;
 }
 
@@ -133,7 +131,6 @@ main {
     margin: 0 0 0.75rem;
     padding: 0.75rem 1rem;
     background-color: var(--surface);
-    border-left: 5px solid var(--accent);
     border-radius: 4px;
 }
 
@@ -196,7 +193,7 @@ main {
 }
 
 .board-lines line {
-    stroke: var(--line);
+    stroke: var(--accent);
     stroke-width: 0.6;
     stroke-linecap: round;
 }
@@ -218,7 +215,7 @@ main {
     height: 22%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background-color: var(--line);
+    background-color: var(--accent);
 }
 
 .point.piece::after {
@@ -226,13 +223,11 @@ main {
 }
 
 .point.player1 {
-    background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #8C9AFF 25%, var(--blue) 75%);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    background: var(--blue);
 }
 
 .point.player2 {
-    background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #FF9A9A 25%, var(--red) 75%);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    background: var(--red);
 }
 
 .point.movable {
@@ -242,31 +237,22 @@ main {
 }
 
 .point.selected {
-    outline: 4px solid var(--text);
+    outline: 4px solid white;
     outline-offset: 2px;
 }
 
 .point.target {
     cursor: pointer;
-    background-color: rgba(242, 169, 59, 0.55);
+    background-color: rgba(243, 241, 238, 0.5);
 }
 
-.point.target::after {
-    background-color: var(--highlight);
-    width: 40%;
-    height: 40%;
-}
 
 .point.path::after {
     background-color: var(--highlight);
 }
 
 .point.last {
-    box-shadow: 0 0 0 3px rgba(43, 30, 24, 0.35);
-}
-
-.board.waiting .point {
-    cursor: wait;
+    box-shadow: 0 0 0 3px var(--accent);
 }
 
 /* ---------- Buttons ---------- */
@@ -274,14 +260,15 @@ main {
     padding: 0.5rem 1rem;
     border: 1px solid var(--accent);
     border-radius: 6px;
-    background-color: var(--surface);
-    color: var(--text);
+    background-color: var(--accent);
+    color: #FFFFFF;
     font-size: 0.95rem;
     cursor: pointer;
 }
 
 .btn:hover {
-    background-color: var(--background);
+    background-color: #aaa2fd;
+    border-color: var(--accent);
 }
 
 .btn:active {
@@ -289,22 +276,24 @@ main {
 }
 
 .btn:disabled {
-    opacity: 0.45;
     cursor: not-allowed;
 }
 
 .btn-primary {
     background-color: var(--accent);
     color: #FFFFFF;
+    border-color: var(--accent);
 }
 
 .btn-primary:hover {
-    background-color: var(--line);
+    background-color: #aaa2fd;
+    border-color: var(--accent);
 }
 
 .btn-secondary {
-    border-color: var(--red);
-    color: var(--red);
+    background-color: var(--accent);
+    color: #FFFFFF;
+    border-color: var(--accent);
 }
 
 /* ---------- Overlays: instructions + rankings ---------- */

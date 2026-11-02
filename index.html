@@ -8,19 +8,17 @@
 </head>
 <body>
     <header>
-        <!-- Logo -->
         <div id="logo">
             <img src="Logo.png" alt="Alquerque logo">
         </div>
 
-        <!-- Identification -->
         <section id="identification" aria-label="Identification">
             <form id="login-form">
                 <label for="login-user">Username</label>
                 <input id="login-user" name="user" type="text" autocomplete="username">
                 <label for="login-pass">Password</label>
                 <input id="login-pass" name="password" type="password">
-                <button type="submit" class="btn btn-primary">Log in</button>
+                <button type="submit" class="btn">Log in</button>
             </form>
             <div id="user-info" hidden>
                 <span>Hello, <strong id="user-name"></strong></span>
@@ -31,7 +29,6 @@
 
     <main>
         <aside id="side">
-            <!-- Configuration -->
             <section id="config" class="panel">
                 <h2>Configuration</h2>
                 <label for="cfg-size">Board size</label>
@@ -61,19 +58,17 @@
                 </select>
             </section>
 
-            <!-- Commands -->
             <section id="commands" class="panel">
                 <h2>Commands</h2>
-                <button type="button" id="btn-start" class="btn btn-primary">Start game</button>
+                <button type="button" id="btn-start" class="btn">Start game</button>
                 <button type="button" id="btn-pass" class="btn">Pass turn</button>
-                <button type="button" id="btn-resign" class="btn btn-secondary">Resign</button>
+                <button type="button" id="btn-resign" class="btn">Resign</button>
                 <button type="button" id="btn-instructions" class="btn">Instructions</button>
                 <button type="button" id="btn-rankings" class="btn">Rankings</button>
             </section>
         </aside>
 
         <section id="play" aria-label="Game">
-            <!-- Messages -->
             <p id="message" role="status"></p>
 
             <div id="score">
@@ -81,12 +76,10 @@
                 <span class="tag player2">Computer: <strong id="count-computer">0</strong></span>
             </div>
 
-            <!-- Board (generated in JavaScript) -->
             <div id="board" class="board"></div>
         </section>
     </main>
 
-    <!-- Instructions -->
     <dialog id="instructions">
         <h2>Instructions</h2>
         <ul>
@@ -104,11 +97,10 @@
             <li>Click the piece again to cancel the selection.</li>
         </ol>
         <form method="dialog">
-            <button class="btn btn-primary">Close</button>
+            <button class="btn">Close</button>
         </form>
     </dialog>
 
-    <!-- Rankings -->
     <dialog id="rankings">
         <h2>Rankings</h2>
         <table>
@@ -124,7 +116,7 @@
             <tbody id="rankings-body"></tbody>
         </table>
         <form method="dialog">
-            <button class="btn btn-primary">Close</button>
+            <button class="btn">Close</button>
         </form>
     </dialog>
 

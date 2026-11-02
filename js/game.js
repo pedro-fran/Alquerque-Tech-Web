@@ -1,29 +1,4 @@
-/*  ** ALQUERQUE **
-
-  Game state and rules. No DOM here, so it can be tested on its own.
-
-  NxN board of positions (N odd: 5, 7, 9). board[r][c]: 0 empty, 1 or 2 a piece.
-  Row 0 is the top. Player 1 (blue) starts at the bottom and moves up;
-  player 2 (red) starts at the top and moves down.
-
-  Lines: every position connects to its orthogonal neighbours; diagonals only
-  pass through positions where (r + c) is even.
-
-  MOVES
-    { from: [r, c], to: [r, c], path: [[r, c], ...], captures: [[r, c], ...] }
-    | path lists every landing point (one for a step, one per jump in a capture).
-    | captures is empty for a simple step.
-
-  RULES IMPLEMENTED
-    - Step to an adjacent empty position along a line, never backwards.
-    - Capture: jump over an adjacent opponent piece to the empty position right
-      behind it, in any direction. After a capture, if another one is possible
-      the piece must keep capturing (only complete chains are legal moves).
-      A chain can't land twice on the same position nor capture a piece twice.
-    - A player with no pieces loses.
-    - A player with no moves must pass. Both players pass in a row -> draw.
-    - NOT implemented yet: the "blow" rule (so capturing is optional).
-*/
+/* Game state and rules. board[r][c]: 0 empty, 1 or 2 a piece. */
 
 const EMPTY = 0;
 const DRAW = 3;
@@ -38,8 +13,6 @@ class Alquerque {
         this.resigned = 0;   // player who resigned (0 = nobody)
     }
 
-    // Each player fills the rows closest to them; on the middle row each one
-    // gets the positions to their right; only the centre stays empty.
     static initialBoard(n) {
         const mid = (n - 1) / 2;
         const board = [];
@@ -63,7 +36,6 @@ class Alquerque {
         return p === 1 ? 2 : 1;
     }
 
-    // Direction (in rows) that counts as "forward" for player p.
     forward(p) {
         return p === 1 ? -1 : 1;
     }
@@ -78,12 +50,10 @@ class Alquerque {
         return n;
     }
 
-    // Directions available from (r, c), following the board lines.
     directionsFrom(r, c) {
         return Alquerque.hasDiagonals(r, c) ? DIRS : DIRS.slice(0, 4);
     }
 
-    // Every legal move for the current player (empty if they must pass).
     getLegalMoves() {
         if (this.getWinner() !== 0) return [];
         const p = this.currentPlayer;
@@ -100,7 +70,7 @@ class Alquerque {
 
     addSteps(r, c, p, moves) {
         for (const [dr, dc] of this.directionsFrom(r, c)) {
-            if (dr === -this.forward(p)) continue; // no going back
+            if (dr === -this.forward(p)) continue;
             const tr = r + dr, tc = c + dc;
             if (this.inside(tr, tc) && this.board[tr][tc] === EMPTY) {
                 moves.push({ from: [r, c], to: [tr, tc], path: [[tr, tc]], captures: [] });
@@ -108,7 +78,6 @@ class Alquerque {
         }
     }
 
-    // Depth-first search over capture chains; only complete chains are moves.
     addCaptures(r0, c0, p, moves) {
         const opp = this.opponent(p);
         const same = (a, b) => a[0] === b[0] && a[1] === b[1];
@@ -120,10 +89,10 @@ class Alquerque {
                 const land = [r + 2 * dr, c + 2 * dc];
                 if (!this.inside(land[0], land[1])) continue;
                 if (this.board[mid[0]][mid[1]] !== opp) continue;
-                if (captures.some(x => same(x, mid))) continue;            // captured already
-                if (same(land, [r0, c0])) continue;                          // back to the start
+                if (captures.some(x => same(x, mid))) continue;
+                if (same(land, [r0, c0])) continue;
                 if (this.board[land[0]][land[1]] !== EMPTY) continue;
-                if (path.some(x => same(x, land))) continue;                 // landed here already
+                if (path.some(x => same(x, land))) continue;
 
                 extended = true;
                 search(land[0], land[1], [...path, land], [...captures, mid]);
@@ -136,24 +105,17 @@ class Alquerque {
         search(r0, c0, [], []);
     }
 
-    // Applies a legal move and passes the turn. Returns false if the move is invalid.
     play(move) {
-        const key = Alquerque.moveKey(move);
-        const legal = this.getLegalMoves().find(m => Alquerque.moveKey(m) === key);
-        if (!legal) return false;
-
-        const [fr, fc] = legal.from;
-        const [tr, tc] = legal.to;
+        const [fr, fc] = move.from;
+        const [tr, tc] = move.to;
         this.board[fr][fc] = EMPTY;
-        for (const [cr, cc] of legal.captures) this.board[cr][cc] = EMPTY;
+        for (const [cr, cc] of move.captures) this.board[cr][cc] = EMPTY;
         this.board[tr][tc] = this.currentPlayer;
 
         this.passes = 0;
         this.currentPlayer = this.opponent(this.currentPlayer);
-        return true;
     }
 
-    // Only allowed when the current player has no legal move.
     pass() {
         if (this.getWinner() !== 0 || this.getLegalMoves().length > 0) return false;
         this.passes++;
@@ -176,9 +138,5 @@ class Alquerque {
 
     isOver() {
         return this.getWinner() !== 0;
-    }
-
-    static moveKey(m) {
-        return JSON.stringify([m.from, m.path]);
     }
 }

@@ -1,9 +1,4 @@
-/*  ** APP **
-
-  Wires the page areas (configuration, commands, identification, board,
-  messages, instructions, rankings) to the game.
-  The human is always player 1 (blue, bottom); the computer is player 2 (red, top).
-*/
+/* Connects the page to the game. The human is player 1, the computer player 2. */
 
 const HUMAN = 1;
 const COMPUTER = 2;
@@ -17,11 +12,11 @@ class App {
         this.game = null;
         this.ai = null;
         this.aiTimer = null;
-        this.notice = "";   // extra info shown with the turn message
-        this.selected = null; // [r, c] of the piece being moved
-        this.path = [];       // landing points already clicked during a capture
+        this.notice = "";
+        this.selected = null;
+        this.path = [];
         this.lastMove = null;
-        this.rankings = {};   // "5x5|medium" -> { wins, losses, draws } (lost on reload, as allowed)
+        this.rankings = {};
 
         this.$("btn-start").addEventListener("click", () => this.startGame());
         this.$("btn-pass").addEventListener("click", () => this.pass());
@@ -72,18 +67,17 @@ class App {
     startGame() {
         clearTimeout(this.aiTimer);
         const cfg = this.config();
-        this.current = cfg;
         this.game = new Alquerque(cfg.size, cfg.first);
         this.ai = new SimpleAI(cfg.level);
         this.selected = null;
         this.path = [];
         this.lastMove = null;
+        this.notice = "";
 
         this.board.build(cfg.size);
         this.nextTurn();
     }
 
-    // Called after every move/pass: ends the game or hands the turn over.
     nextTurn() {
         this.refresh();
         if (this.game.isOver()) {
@@ -119,7 +113,8 @@ class App {
     }
 
     endGame(winner) {
-        const key = this.current.size + "x" + this.current.size + "|" + this.current.level;
+        const cfg = this.config();
+        const key = cfg.size + "x" + cfg.size + "|" + cfg.level;
         const entry = (this.rankings[key] ||= { wins: 0, losses: 0, draws: 0 });
 
         if (this.game.resigned === HUMAN) {
@@ -135,13 +130,10 @@ class App {
             entry.draws++;
             this.message("Game over: draw (neither player can move).");
         }
-        this.updateCommands();
     }
 
     pass() {
         if (!this.isHumanTurn() || !this.game.pass()) return;
-        this.selected = null;
-        this.path = [];
         this.notice = "You passed your turn.";
         this.nextTurn();
     }
@@ -149,24 +141,17 @@ class App {
     resign() {
         if (!this.isPlaying()) return;
         clearTimeout(this.aiTimer);
-        this.selected = null;
-        this.path = [];
         this.game.resign(HUMAN);
-        this.refresh();
-        this.endGame(this.game.getWinner());
+        this.nextTurn();
     }
 
-    // ---------- board interaction (modes: choose piece -> choose destination) ----------
-
-    humanMoves() {
-        return this.game.getLegalMoves();
-    }
+    // ---------- board interaction ----------
 
     // Moves of the selected piece that are still compatible with the clicked path.
     candidates() {
         if (!this.selected) return [];
         const same = (a, b) => a[0] === b[0] && a[1] === b[1];
-        return this.humanMoves().filter(m =>
+        return this.game.getLegalMoves().filter(m =>
             same(m.from, this.selected) && this.path.every((p, i) => same(m.path[i], p)));
     }
 
@@ -181,7 +166,7 @@ class App {
             return;
         }
 
-        const moves = this.humanMoves();
+        const moves = this.game.getLegalMoves();
         if (moves.length === 0) {
             this.message("You have no possible moves: press “Pass turn”.", "warn");
             return;
@@ -189,36 +174,26 @@ class App {
 
         const ownMovable = moves.some(m => m.from[0] === r && m.from[1] === c);
 
-        // Mode 1: no piece selected yet
         if (!this.selected) {
             if (ownMovable) {
                 this.selected = [r, c];
-                this.path = [];
-            } else if (this.game.board[r][c] === HUMAN) {
-                this.message("That piece has no possible moves.", "warn");
-                return;
+                this.refresh();
             } else {
-                this.message("Choose one of your pieces (blue).", "warn");
-                return;
+                this.message(this.game.board[r][c] === HUMAN ? "That piece has no possible moves." : "Choose one of your pieces (blue).", "warn");
             }
-            this.refresh();
             return;
         }
 
-        // Mode 2: piece selected, choosing the destination
         const step = this.path.length;
         const next = this.candidates().filter(m => m.path[step][0] === r && m.path[step][1] === c);
 
         if (next.length === 0) {
-            if (step === 0 && r === this.selected[0] && c === this.selected[1]) {
-                this.selected = null; // click the same piece again to deselect
-            } else if (step === 0 && ownMovable) {
-                this.selected = [r, c];
-            } else {
+            if (step > 0 || !ownMovable) {
                 this.message("Invalid destination. Choose one of the highlighted points.", "warn");
-                return;
+            } else {
+                this.selected = r === this.selected[0] && c === this.selected[1] ? null : [r, c];
+                this.refresh();
             }
-            this.refresh();
             return;
         }
 
@@ -234,31 +209,28 @@ class App {
     // ---------- rendering ----------
 
     refresh() {
-        if (!this.game) return;
         const marks = { last: this.lastMove || [] };
-        const humanTurn = this.isHumanTurn();
+        const pre = this.notice ? this.notice + " " : "";
 
-        if (humanTurn) {
-            const moves = this.humanMoves();
+        if (this.isHumanTurn()) {
+            const moves = this.game.getLegalMoves();
             if (this.selected) {
                 marks.selected = this.path.length ? this.path[this.path.length - 1] : this.selected;
-                marks.path = this.path.length ? [this.selected, ...this.path] : [];
+                marks.path = this.path;
                 marks.targets = this.candidates().map(m => m.path[this.path.length]);
             } else {
                 marks.movable = moves.map(m => m.from);
             }
 
-            const pre = this.notice ? this.notice + " " : "";
             if (moves.length === 0) this.message(pre + "You have no possible moves: press “Pass turn”.", "warn");
             else if (this.path.length) this.message("Multiple capture: choose the next jump.");
             else if (this.selected) this.message("Choose the destination (highlighted points) or another piece.");
             else this.message(pre + "It's your turn: choose a blue piece to move.");
         } else if (this.isPlaying()) {
-            this.message((this.notice ? this.notice + " " : "") + "Computer's turn…");
+            this.message(pre + "Computer's turn…");
         }
 
         this.board.render(this.game.board, marks);
-        this.board.setActive(humanTurn);
         this.updateCounts(this.game);
         this.updateCommands();
     }
@@ -266,13 +238,12 @@ class App {
     updateCounts(game) {
         this.$("count-human").textContent = game.countPieces(HUMAN);
         this.$("count-computer").textContent = game.countPieces(COMPUTER);
-        this.$("name-human").textContent = this.username || "Player";
     }
 
     updateCommands() {
         const playing = this.isPlaying();
         const humanTurn = this.isHumanTurn();
-        const mustPass = humanTurn && this.humanMoves().length === 0;
+        const mustPass = humanTurn && this.game.getLegalMoves().length === 0;
         this.$("btn-pass").disabled = !mustPass;
         this.$("btn-resign").disabled = !playing;
         this.$("btn-start").textContent = playing ? "Restart" : "Start game";
@@ -288,36 +259,27 @@ class App {
     renderRankings() {
         const body = this.$("rankings-body");
         body.replaceChildren();
+        const addRow = cells => {
+            const tr = body.insertRow();
+            for (const v of cells) tr.insertCell().textContent = v;
+            return tr;
+        };
+
         const keys = Object.keys(this.rankings).sort();
-        if (keys.length === 0) {
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-            td.colSpan = 5;
-            td.textContent = "No games recorded yet.";
-            tr.appendChild(td);
-            body.appendChild(tr);
-            return;
-        }
+        if (keys.length === 0) addRow(["No games recorded yet."]).cells[0].colSpan = 5;
         for (const key of keys) {
             const [size, level] = key.split("|");
             const e = this.rankings[key];
-            const tr = document.createElement("tr");
-            for (const v of [size, LEVEL_NAMES[level], e.wins, e.losses, e.draws]) {
-                const td = document.createElement("td");
-                td.textContent = v;
-                tr.appendChild(td);
-            }
-            body.appendChild(tr);
+            addRow([size, LEVEL_NAMES[level], e.wins, e.losses, e.draws]);
         }
     }
 
-    // ---------- identification (no real authentication in the 1st delivery) ----------
+    // ---------- identification ----------
 
     login(e) {
         e.preventDefault();
         const user = this.$("login-user").value.trim();
         if (!user) return;
-        this.username = user;
         this.$("login-form").hidden = true;
         this.$("user-info").hidden = false;
         this.$("user-name").textContent = user;
@@ -325,7 +287,6 @@ class App {
     }
 
     logout() {
-        this.username = null;
         this.$("login-form").reset();
         this.$("login-form").hidden = false;
         this.$("user-info").hidden = true;

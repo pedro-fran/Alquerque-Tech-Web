@@ -1,19 +1,4 @@
-/*  ** BOARD VIEW **
-
-  Draws an Alquerque board inside a container, entirely from JavaScript (DOM).
-  Lines are an <svg>; each position is a <div class="point"> placed with
-  element.style in percentages, so the same code works for any size.
-
-  BoardView(container, onClick)
-    onClick(r, c) -> called when a position is clicked.
-
-  build(size)
-    | (Re)creates lines and positions for a size x size board.
-
-  render(board, marks)
-    | board -> number[][] (0 empty, 1, 2)
-    | marks -> { selected: [r,c], targets: [[r,c]], movable: [[r,c]], path: [[r,c]], last: [[r,c]] }
-*/
+/* Draws the board and its pieces in the page. */
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 const BOARD_MARGIN = 8; // % of the board left free around the outer lines
@@ -26,7 +11,6 @@ class BoardView {
         this.points = [];
     }
 
-    // Position (in %) of line i.
     pos(i) {
         return BOARD_MARGIN + ((100 - 2 * BOARD_MARGIN) * i) / (this.size - 1);
     }
@@ -50,8 +34,8 @@ class BoardView {
 
         const last = size - 1;
         for (let i = 0; i < size; i++) {
-            line(i, 0, i, last); // row
-            line(0, i, last, i); // column
+            line(i, 0, i, last);
+            line(0, i, last, i);
         }
         // One diagonal per square, alternating so they only cross where (r + c) is even.
         for (let r = 0; r < last; r++) {
@@ -62,7 +46,6 @@ class BoardView {
         }
         this.container.appendChild(svg);
 
-        // Positions
         const diameter = (100 - 2 * BOARD_MARGIN) / last * 0.58;
         this.points = [];
         for (let r = 0; r < size; r++) {
@@ -98,9 +81,5 @@ class BoardView {
                 if (has(marks.last, r, c)) p.classList.add("last");
             }
         }
-    }
-
-    setActive(active) {
-        this.container.classList.toggle("waiting", !active);
     }
 }

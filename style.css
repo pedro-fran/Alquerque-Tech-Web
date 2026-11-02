@@ -20,7 +20,6 @@ body {
     font-family: "Segoe UI", Arial, sans-serif;
 }
 
-h1,
 h2,
 h3 {
     font-family: Lora, Arial, serif;
@@ -46,12 +45,6 @@ header {
 #logo img {
     height: 150px;
     width: auto;
-}
-
-#logo h1 {
-    margin: 0;
-    font-size: 2rem;
-    letter-spacing: 0.05em;
 }
 
 #identification form,
@@ -139,12 +132,10 @@ main {
 }
 
 #message.win {
-    border-left-color: #3BA55C;
     font-weight: bold;
 }
 
 #message.loss {
-    border-left-color: var(--red);
     font-weight: bold;
 }
 
@@ -198,14 +189,12 @@ main {
     stroke-linecap: round;
 }
 
-/* Every position; left/top/width/height are set from JavaScript. */
 .point {
     position: absolute;
     transform: translate(-50%, -50%);
     border-radius: 50%;
 }
 
-/* Empty position: small dot */
 .point::after {
     content: "";
     position: absolute;
@@ -232,18 +221,18 @@ main {
 
 .point.movable {
     cursor: pointer;
-    outline: 3px solid var(--highlight);
+    outline: 3px solid rgb(208, 208, 94);
     outline-offset: 2px;
 }
 
 .point.selected {
-    outline: 4px solid white;
+    outline: 4px solid rgb(208, 208, 94);
     outline-offset: 2px;
 }
 
 .point.target {
     cursor: pointer;
-    background-color: rgba(243, 241, 238, 0.5);
+    background-color: rgba(176, 128, 55, 0.49);
 }
 
 
@@ -277,23 +266,7 @@ main {
 
 .btn:disabled {
     cursor: not-allowed;
-}
-
-.btn-primary {
-    background-color: var(--accent);
-    color: #FFFFFF;
-    border-color: var(--accent);
-}
-
-.btn-primary:hover {
-    background-color: #aaa2fd;
-    border-color: var(--accent);
-}
-
-.btn-secondary {
-    background-color: var(--accent);
-    color: #FFFFFF;
-    border-color: var(--accent);
+    opacity: 0.5;
 }
 
 /* ---------- Overlays: instructions + rankings ---------- */

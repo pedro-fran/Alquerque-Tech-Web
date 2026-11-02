@@ -1,13 +1,4 @@
-/*  ** SIMPLE AI **
-
-  As suggested in the assignment:
-    - random: pick any legal move;
-    - greedy: prefer moves that capture (the one capturing the most pieces).
-  The difficulty level is the probability of using the greedy method on each turn.
-
-  SimpleAI(level)          | level: "easy", "medium" or "hard"
-  move chooseMove(game)    | Returns a legal move, or null if the AI must pass.
-*/
+/* Computer player: the level sets how often it picks the biggest capture. */
 
 const GREEDY_CHANCE = { easy: 0, medium: 0.5, hard: 1 };
 

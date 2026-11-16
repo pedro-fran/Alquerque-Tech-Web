@@ -1,5 +1,5 @@
 /* Connects the page to the game. The human is player 1, the computer player 2. */
-
+//comment
 const HUMAN = 1;
 const COMPUTER = 2;
 const LEVEL_NAMES = { easy: "Easy", medium: "Medium", hard: "Hard" };

@@ -3,6 +3,17 @@
 const HUMAN = 1;
 const COMPUTER = 2;
 const LEVEL_NAMES = { easy: "Easy", medium: "Medium", hard: "Hard" };
+const SERVER = "http://twserver.alunos.dcc.fc.up.pt:8008";
+
+async function request(command, data) {
+    const response = await fetch(SERVER + "/" + command, {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    if (result.error) throw new Error(result.error);
+    return result;
+}
 
 class App {
     constructor() {
@@ -17,6 +28,8 @@ class App {
         this.path = [];
         this.lastMove = null;
         this.rankings = {};
+        this.nick = null;
+        this.password = null;
 
         this.$("btn-start").addEventListener("click", () => this.startGame());
         this.$("btn-pass").addEventListener("click", () => this.pass());

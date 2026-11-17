@@ -290,21 +290,43 @@ class App {
     // ---------- identification ----------
 
     login(e) {
-        e.preventDefault();
-        const user = this.$("login-user").value.trim();
-        if (!user) return;
-        this.$("login-form").hidden = true;
-        this.$("user-info").hidden = false;
-        this.$("user-name").textContent = user;
-        this.$("name-human").textContent = user;
+    e.preventDefault();//prevents default form submit - the page does not reload
+    const username = document.getElementById("login-user").value.trim();
+    const password = document.getElementById("login-pass").value;
+
+    if (!username || !password) return;//either space cannot be empty
+
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    //persists across page refreshes??
+
+
+    if (users[username] && users[username] !== password) {
+        alert("Username already taken by someone else.");
+        return;
     }
 
-    logout() {
-        this.$("login-form").reset();
-        this.$("login-form").hidden = false;
-        this.$("user-info").hidden = true;
-        this.$("name-human").textContent = "Player";
-    }
+    // Register or confirm
+    users[username] = password;
+    localStorage.setItem("users", JSON.stringify(users));//saves the object back to JSON string
+
+    this.username = username;
+    this.password = password;
+
+    this.$("login-form").hidden = true;
+    this.$("user-info").hidden = false;
+    //sets the username
+    this.$("user-name").textContent = username;
+    this.$("name-human").textContent = username;
+}
+
+logout() {
+    this.username = null;
+    this.password = null;
+    this.$("login-form").reset();
+    this.$("login-form").hidden = false;
+    this.$("user-info").hidden = true;
+    this.$("name-human").textContent = "Player";
+}
 }
 
 window.addEventListener("DOMContentLoaded", () => new App());

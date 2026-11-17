@@ -310,3 +310,23 @@ dialog form {
 #rankings th {
     background-color: var(--background);
 }
+
+/* login */
+.login {
+    display: none; /* hidden by default */
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e74c3c;
+    color: white;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+}
+
+.login.visible {
+    display: block;
+}
